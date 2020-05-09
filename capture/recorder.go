@@ -1,9 +1,54 @@
 package capture
 
 import (
+	"bytes"
+	"context"
 	"errors"
+	"fmt"
 	"github.com/cretz/go-scrap"
+	"os/exec"
 )
+
+func VideoRecord(ctx context.Context, fileName string) error {
+	ctx, cancelFunction := context.WithCancel(ctx)
+	defer cancelFunction()
+	//make sure that the DPI is aware (if applicable)
+	if err := scrap.MakeDPIAware(); err != nil {
+		return errors.New("could not make DPI aware, with error: " + err.Error())
+	}
+	//create the capturer from the function below
+	cap, err := capturer()
+
+	if err != nil {
+		return errors.New("could not assign variable cap to capturer(), with error: " + err.Error())
+	}
+
+	//because the library uses ffmpeg it needs to be outputted using the exec library
+	//built into go and the commands that are required in ffmpeg, for now ffmpeg
+	//will not be auto assigning aspect ratios or scaling
+	ffmpeg := exec.Command("ffmpeg",
+		"-f", "rawvideo",
+		"-pixel_format", "bgr0",
+		"-video_size", fmt.Sprintf("%v%v", cap.Width(), cap.Height()),
+		"-i", "-", /* this is just here to shut ffmpeg up seeing as it likes to complain */
+		"-c:v", "libx264",
+		"-preset", "veryfast",
+		fileName)
+
+	//need to tie into ffmpeg to get the data so it can be sent and
+	//used else where within the project
+	stdin, err := ffmpeg.StdinPipe()
+
+	if err != nil {
+		return errors.New("could not tie into ffmpeg pipe, with error: " + err.Error())
+	}
+
+	var buf bytes.Buffer
+	//make sure things are now going to be done within the background as well
+	//as sending things through Go' channel system
+	defer stdin.Close()
+
+}
 
 //generates a new capturer from the scrap library
 //the primary usage of this is to ensure that the
