@@ -56,6 +56,39 @@ func VideoRecord(ctx context.Context, fileName string) error {
 		fmt.Printf("Output: \n%v\n", string(out))
 		errCh <- err
 	}()
+
+	//now to start sending a bunch of frames, this could go either
+	//way to be honest so brace yourself
+	for {
+		//get the frames
+		if pix, _, err := cap.Frame(); err != nil {
+			return errors.New("could not obtain frames, with error: " + err.Error())
+		} else if pix != nil {
+			//the frames are sent one row at a time
+			stride := len(pix) / cap.Height()
+			rowLen := 4 * cap.Width()
+			for i := 0; i < len(pix); i += stride {
+				if _, err = stdin.Write(pix[i : i+rowLen]); err != nil {
+					break
+				}
+			}
+
+			buf.Reset()
+			if err != nil {
+				return errors.New("resetting buffer failed, with error: " + err.Error())
+			}
+		}
+
+		//if it's not done then it goes again
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case err := <-errCh:
+			return errors.New("unknown error caught: " + err.Error())
+		default:
+			//does nothing tbh
+		}
+	}
 }
 
 //generates a new capturer from the scrap library
