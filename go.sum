@@ -1,0 +1,4 @@
+github.com/AllenDang/w32 v0.0.0-20180428130237-ad0a36d80adc h1:w3fW4b1hPf6/cfdQQ/vu9V8eBeQmuLZIaUMj81nIzYQ=
+github.com/AllenDang/w32 v0.0.0-20180428130237-ad0a36d80adc/go.mod h1:1rHKulT5eD2DzdKxDXUZRKtBfkTzLmTL42ZmEmOfyrs=
+github.com/cretz/go-scrap v0.0.0-20200312194224-54530fbef1b2 h1:97zjv50XCYl6M++ID56PsKZcpsbT2fnSK5FFGnnFTmI=
+github.com/cretz/go-scrap v0.0.0-20200312194224-54530fbef1b2/go.mod h1:bKL34LoGmxild9fWEyNFYu/PwOsJiI+Jv7r/R9HVLSQ=
