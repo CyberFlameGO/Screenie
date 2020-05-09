@@ -3,8 +3,26 @@ package capture
 import (
 	"errors"
 	"github.com/cretz/go-scrap"
+	"image/png"
+	"os"
 	"time"
 )
+
+func SaveScreenshot(fileName string) error {
+	img, err := getScreenshot()
+	if err != nil {
+		return errors.New("could not find screenshot, with error: " + err.Error())
+	}
+
+	file, err := os.Create(fileName)
+
+	if err != nil {
+		return errors.New("could not create file, with error: " + err.Error())
+	}
+
+	defer file.Close()
+	return png.Encode(file, img)
+}
 
 func getScreenshot() (*scrap.FrameImage, error) {
 	//make sure that the dpi is aware
