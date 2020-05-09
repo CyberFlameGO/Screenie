@@ -6,11 +6,37 @@ import (
 	"errors"
 	"fmt"
 	"github.com/cretz/go-scrap"
+	"log"
+	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
-func VideoRecord(ctx context.Context, fileName string) error {
+func VideoRecordingRunner() {
+	fmt.Printf("starting recording...")
+	errCh := make(chan error, 2)
+	ctx, cancelFunction := context.WithCancel(context.Background())
+	go func() {
+		errCh <- videoRecord(ctx, os.Args[1])
+	}()
+
+	//wait for the cancel to come in
+	go func() {
+		fmt.Scanln()
+		errCh <- nil
+	}()
+
+	err := <-errCh
+	cancelFunction()
+
+	if err != nil && err != context.Canceled {
+		log.Fatalf("could not process execution: %v", err)
+	}
+	time.Sleep(4 * time.Second)
+}
+
+func videoRecord(ctx context.Context, fileName string) error {
 	ctx, cancelFunction := context.WithCancel(ctx)
 	defer cancelFunction()
 	//make sure that the DPI is aware (if applicable)
