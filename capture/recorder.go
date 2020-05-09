@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/cretz/go-scrap"
 	"os/exec"
+	"strings"
 )
 
 func VideoRecord(ctx context.Context, fileName string) error {
@@ -47,7 +48,14 @@ func VideoRecord(ctx context.Context, fileName string) error {
 	//make sure things are now going to be done within the background as well
 	//as sending things through Go' channel system
 	defer stdin.Close()
+	errCh := make(chan error, 1)
 
+	go func() {
+		fmt.Printf("Executing: %v", strings.Join(ffmpeg.Args, " "))
+		out, err := ffmpeg.CombinedOutput()
+		fmt.Printf("Output: \n%v\n", string(out))
+		errCh <- err
+	}()
 }
 
 //generates a new capturer from the scrap library
