@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"screenie/capture"
 )
 
 func main() {
@@ -13,5 +14,7 @@ func main() {
 	if err := cmd.Run(); err != nil {
 		fmt.Print("ffmpeg is not installed or could not be found in the OS path, exiting...")
 		os.Exit(1)
+	} else {
+		capture.VideoRecordingRunner()
 	}
 }
