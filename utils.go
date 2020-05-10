@@ -1,6 +1,7 @@
 package Screenie
 
 import (
+	"fyne.io/fyne"
 	"fyne.io/fyne/widget"
 	"github.com/lxn/win"
 )
@@ -28,5 +29,16 @@ func FyneEntry(placeHolder string) *widget.Entry {
 
 func FyneButton(text string, action func()) *widget.Button {
 	w := widget.NewButton(text, action)
+	return w
+}
+
+func FyneGroup(title string, visible bool, children ...fyne.CanvasObject) *widget.Group {
+	w := widget.NewGroup(title, children...)
+	if visible {
+		w.Show()
+	} else {
+		w.Hide()
+	}
+
 	return w
 }
