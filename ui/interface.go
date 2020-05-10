@@ -6,6 +6,7 @@ import (
 	f "fyne.io/fyne/app"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
+	"log"
 	Screenie "screenie"
 	"screenie/capture"
 	"time"
@@ -35,7 +36,11 @@ func InitInterface() {
 						}),
 						fyne.NewContainerWithLayout(layout.NewGridLayout(1),
 							Screenie.FyneButton("Screenshot", func() {
-								capture.SaveScreenshot(fmt.Sprintf("DD-MM-YYYY", time.Now()))
+								err := capture.SaveScreenshot(fmt.Sprintf("DD-MM-YYYY", time.Now()))
+								//todo add this into a error box
+								if err != nil {
+									log.Fatalf("could not save screenshot at: %s with error: %v", time.Now(), err.Error())
+								}
 							}),
 							fyne.NewContainerWithLayout(layout.NewGridLayout(1),
 								Screenie.FyneButton("Settings", func() {
