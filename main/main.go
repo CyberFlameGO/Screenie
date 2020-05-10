@@ -15,7 +15,6 @@ func main() {
 		fmt.Print("ffmpeg is not installed or could not be found in the OS path, exiting...")
 		os.Exit(1)
 	} else {
-		//capture.VideoRecordingRunner()
 		ui.InitInterface()
 	}
 }
