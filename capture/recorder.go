@@ -44,10 +44,10 @@ func videoRecord(ctx context.Context, fileName string) error {
 		return errors.New("could not make DPI aware, with error: " + err.Error())
 	}
 	//create the capturer from the function below
-	cap, err := capturer()
+	cp, err := capturer()
 
 	if err != nil {
-		return errors.New("could not assign variable cap to capturer(), with error: " + err.Error())
+		return errors.New("could not assign variable cp to capturer(), with error: " + err.Error())
 	}
 
 	//because the library uses ffmpeg it needs to be outputted using the exec library
@@ -56,7 +56,7 @@ func videoRecord(ctx context.Context, fileName string) error {
 	ffmpeg := exec.Command("ffmpeg",
 		"-f", "rawvideo",
 		"-pixel_format", "bgr0",
-		"-video_size", fmt.Sprintf("%v%v", cap.Width(), cap.Height()),
+		"-video_size", fmt.Sprintf("%v%v", cp.Width(), cp.Height()),
 		"-i", "-", /* this is just here to shut ffmpeg up seeing as it likes to complain */
 		"-c:v", "libx264",
 		"-preset", "veryfast",
@@ -87,12 +87,12 @@ func videoRecord(ctx context.Context, fileName string) error {
 	//way to be honest so brace yourself
 	for {
 		//get the frames
-		if pix, _, err := cap.Frame(); err != nil {
+		if pix, _, err := cp.Frame(); err != nil {
 			return errors.New("could not obtain frames, with error: " + err.Error())
 		} else if pix != nil {
 			//the frames are sent one row at a time
-			stride := len(pix) / cap.Height()
-			rowLen := 4 * cap.Width()
+			stride := len(pix) / cp.Height()
+			rowLen := 4 * cp.Width()
 			for i := 0; i < len(pix); i += stride {
 				if _, err = stdin.Write(pix[i : i+rowLen]); err != nil {
 					break
