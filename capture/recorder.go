@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	Screenie "screenie"
 	"strings"
 	"time"
 )
@@ -62,7 +63,7 @@ func videoRecord(ctx context.Context, fileName string) error {
 	ffmpeg := exec.Command("ffmpeg",
 		"-f", "rawvideo",
 		"-pixel_format", "bgr0",
-		"-video_size", fmt.Sprintf("%v%v", cp.Width(), cp.Height()),
+		"-video_size", fmt.Sprintf("%v%v", Screenie.GetScreenWidth(), Screenie.GetScreenHeight()),
 		"-i", "-", /* this is just here to shut ffmpeg up seeing as it likes to complain */
 		"-c:v", "libx264",
 		"-preset", "veryfast",
