@@ -13,8 +13,14 @@ import (
 )
 
 var (
-	app = f.New()
+	app      = f.New()
+	settings Settings
 )
+
+type Settings struct {
+	RecordingScreen string
+	Theme           string
+}
 
 func InitInterface() {
 	app.Settings().SetTheme(theme.DarkTheme()) //todo get the theme from the config
@@ -44,10 +50,25 @@ func InitInterface() {
 							}),
 							fyne.NewContainerWithLayout(layout.NewGridLayout(1),
 								Screenie.FyneButton("Settings", func() {
-									//todo
+									settingsWindow()
 								})))))))))
 	w.SetFixedSize(true)
 	w.CenterOnScreen()
 	w.ShowAndRun()
 
+}
+
+func settingsWindow() {
+
+	settings.RecordingScreen = Screenie.FyneEntry(string(1)).Text
+	settings.Theme = Screenie.FyneEntry("Dark").Text
+	//todo set the theme depending on what is selected
+	w := app.NewWindow("Screenie settings")
+	w.SetContent(fyne.NewContainerWithLayout(layout.NewFormLayout(),
+		Screenie.FyneLabel("Screen to record"),
+		Screenie.FyneEntry(string(1))))
+
+	w.SetFixedSize(true)
+	w.CenterOnScreen()
+	w.ShowAndRun()
 }

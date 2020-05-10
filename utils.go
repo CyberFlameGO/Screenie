@@ -42,3 +42,8 @@ func FyneGroup(title string, visible bool, children ...fyne.CanvasObject) *widge
 
 	return w
 }
+
+func FyneDropdownBox(options []string, action func(string)) *widget.Select {
+	w := widget.NewSelect(options, action)
+	return w
+}
