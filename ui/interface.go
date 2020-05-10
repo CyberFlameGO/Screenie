@@ -46,5 +46,8 @@ func InitInterface() {
 								Screenie.FyneButton("Settings", func() {
 									//todo
 								})))))))))
+	w.SetFixedSize(true)
+	w.CenterOnScreen()
+	w.ShowAndRun()
 
 }
