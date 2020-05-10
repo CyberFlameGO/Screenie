@@ -4,6 +4,7 @@ import (
 	"fmt"
 	fyne "fyne.io/fyne/app"
 	"fyne.io/fyne/widget"
+	"log"
 	"screenie/capture"
 	"time"
 )
@@ -24,7 +25,13 @@ func InitInterface() {
 			capture.VideoRecordingRunner()
 		}),
 		widget.NewButton("Screenshot", func() {
-			capture.SaveScreenshot(fmt.Sprintf("MM-DD-YYYY", time.Now())) //todo ask for them to put in the name
+			err := capture.SaveScreenshot(fmt.Sprintf("MM-DD-YYYY", time.Now())) //todo ask for them to put in the name
+			if err != nil {
+				log.Fatalf("could not start new recording at: %s with error: %v", time.Now(), err.Error())
+			}
+		}),
+		widget.NewButton("Stop recording", func() {
+			capture.StopRecording()
 		})))
 
 	w.ShowAndRun()
