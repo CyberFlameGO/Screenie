@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	Screenie "screenie"
 )
 
 func main() {
@@ -16,6 +15,5 @@ func main() {
 		os.Exit(1)
 	} else {
 		//capture.VideoRecordingRunner()
-		Screenie.TestScreenHeightWidthGetter()
 	}
 }
