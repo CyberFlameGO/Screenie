@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"screenie/ui"
 )
 
 func main() {
@@ -15,5 +16,6 @@ func main() {
 		os.Exit(1)
 	} else {
 		//capture.VideoRecordingRunner()
+		ui.InitInterface()
 	}
 }
