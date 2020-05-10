@@ -13,18 +13,24 @@ import (
 	"time"
 )
 
+var (
+	errCh = make(chan error, 2)
+)
+
+//i know there's better ways to do this but still
+func StopRecording() {
+	//wait for the cancel to come in
+	go func() {
+		errCh <- nil
+	}()
+
+}
+
 func VideoRecordingRunner() {
 	fmt.Printf("starting recording...")
-	errCh := make(chan error, 2)
 	ctx, cancelFunction := context.WithCancel(context.Background())
 	go func() {
 		errCh <- videoRecord(ctx, os.Args[1])
-	}()
-
-	//wait for the cancel to come in
-	go func() {
-		fmt.Scanln()
-		errCh <- nil
 	}()
 
 	err := <-errCh
